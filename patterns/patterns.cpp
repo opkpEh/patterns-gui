@@ -1,15 +1,20 @@
 #include <iostream>
 #include <raylib.h>
-using namespace std;
+using namespace std;const int screenWidth = 800;
+const int screenHeight = 450;
+
+struct PatternDetials {
+	int startDrawWidth = 10;
+	int startDrawHeight = 10;
+	int space = 25;
+	Color color = RAYWHITE;
+} pd;
 
 void starBlock(int n) {
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < n; j++)
-		{
-			cout << "*";
+		for (int i = 0; i < n; i++) {
+		for (int j = 0; j < n; j++) {
+			DrawRectangle(pd.startDrawWidth + (j * pd.space), pd.startDrawHeight + (i * pd.space), 20, 20, RED);
 		}
-		cout << endl;
 	}
 }
 void rightStar(int n)
@@ -18,9 +23,8 @@ void rightStar(int n)
 	{
 		for (int j = 0; j < i+1; j++)
 		{
-			cout << "*";
+			DrawRectangle(pd.startDrawWidth + (j * pd.space), pd.startDrawHeight + (i * pd.space), 20, 20, RED);
 		}
-		cout << endl;
 	}
 }
 void numberRightStar(int n)
@@ -45,17 +49,6 @@ void numberRightStar2(int n)
 		cout << endl;
 	}
 }
-void reverseRightStar(int n)
-{
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = n; j > i; j--)
-		{
-			cout << "*";
-		}
-		cout << endl;
-	}
-}
 void numberReverseRightStar(int n)
 {
 	for (int i = 0; i < n; i++)
@@ -69,42 +62,45 @@ void numberReverseRightStar(int n)
 		cout << endl;
 	}
 }
-void pyramid(int n)
+
+void reverseRightStar(int n)
 {
 	for (int i = 0; i < n; i++)
 	{
-		for (int j = n-1; j > i; j--)
+		for (int j = n; j > i; j--)
 		{
-			cout << " ";
+			DrawRectangle(pd.startDrawWidth + (j * pd.space), pd.startDrawHeight + (i * pd.space), 20, 20, RED);
 		}
-		for (int j = 0; j < 2 * i + 1; j++)
-		{
-			cout << "*";
-		}
-		cout << endl;
 	}
 }
-void reversePyramid(int n)
-{
-	for (int i = 0; i < n; i++)
-	{
-		for (int j = 0; j < i; j++)
-		{
-			cout << " ";
+void pyramid(int n) {
+	int startDrawWidth = 200;
+	int startDrawHeight = 10;
+	int space = 25;
+
+	for (int i = 0; i < n; i++) {
+
+		for (int j = 0; j < 2 * i + 1; j++) {
+			DrawRectangle(startDrawWidth + ((n - i - 1) * space) + (j * space), startDrawHeight + (i * space), 20, 20, RED);
 		}
-		for (int j = 0; j < 2*n-(2*i+1); j++)
-		{
-			cout << "*";
+	}
+}
+void reversePyramid(int n) {
+	int startDrawWidth = 200;
+	int startDrawHeight = 10;
+	int space = 25;
+
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < 2 * n - (2 * i + 1); j++) {
+			DrawRectangle(startDrawWidth + (i * space) + (j * space),startDrawHeight + (i * space),20, 20, RED);
 		}
-		cout << endl;
 	}
 }
 
 int main()
 {
 
-	const int screenWidth = 800;
-	const int screenHeight = 450;
+
 	
 	InitWindow(screenWidth, screenHeight, "Patters");
 	SetTargetFPS(60);
@@ -112,15 +108,12 @@ int main()
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
+		reversePyramid(5);
 		ClearBackground(RAYWHITE);
 		EndDrawing();
 	}
 
 	CloseWindow();
-
-	int n;
-	cout << "Enter the number of rows: ";
-	cin >> n;
-	reversePyramid(n);
+	
 	return 0;
 }
