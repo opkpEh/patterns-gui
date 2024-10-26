@@ -1,6 +1,7 @@
 #include <iostream>
 #include <raylib.h>
-using namespace std;const int screenWidth = 800;
+using namespace std;
+const int screenWidth = 800;
 const int screenHeight = 450;
 
 struct PatternDetials {
@@ -97,23 +98,85 @@ void reversePyramid(int n) {
 	}
 }
 
-int main()
-{
+enum PatternType {
+	NONE,
+	STAR_BLOCK,
+	RIGHT_STAR,
+	REVERSE_RIGHT_STAR,
+	PYRAMID,
+	REVERSE_PYRAMID
+};
 
-
-	
-	InitWindow(screenWidth, screenHeight, "Patters");
+int main() {
+	InitWindow(screenWidth, screenHeight, "Patterns");
 	SetTargetFPS(60);
 
-	while (!WindowShouldClose())
-	{
+	PatternType currentPattern = NONE;
+	Rectangle buttons[5] = {
+		{50, 50, 200, 40},   
+		{50, 100, 200, 40},  
+		{50, 150, 200, 40}, 
+		{50, 200, 200, 40},  
+		{50, 250, 200, 40}   
+	};
+
+	const char* buttonTexts[5] = {
+		"Star Block",
+		"Right Star",
+		"Reverse Right Star",
+		"Pyramid",
+		"Reverse Pyramid"
+	};
+
+	while (!WindowShouldClose()) {
+		Vector2 mousePoint = GetMousePosition();
+
+		if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) {
+			for (int i = 0; i < 5; i++) {
+				if (CheckCollisionPointRec(mousePoint, buttons[i])) {
+					currentPattern = (PatternType)(i + 1);
+					pd.startDrawWidth = 300; 
+					pd.startDrawHeight = 50;
+				}
+			}
+		}
+
 		BeginDrawing();
-		reversePyramid(5);
 		ClearBackground(RAYWHITE);
+
+		for (int i = 0; i < 5; i++) {
+			DrawRectangleRec(buttons[i], LIGHTGRAY);
+			DrawText(buttonTexts[i], buttons[i].x + 10, buttons[i].y + 10, 20, BLACK);
+
+			if (CheckCollisionPointRec(mousePoint, buttons[i])) {
+				DrawRectangleLinesEx(buttons[i], 2, RED);
+			}
+		}
+
+		switch (currentPattern) {
+		case STAR_BLOCK:
+			starBlock(5);
+			break;
+		case RIGHT_STAR:
+			rightStar(5);
+			break;
+		case REVERSE_RIGHT_STAR:
+			reverseRightStar(5);
+			break;
+		case PYRAMID:
+			pyramid(5);
+			break;
+		case REVERSE_PYRAMID:
+			reversePyramid(5);
+			break;
+		default:
+			DrawText("Select a pattern", 300, 200, 30, DARKGRAY);
+			break;
+		}
+
 		EndDrawing();
 	}
 
 	CloseWindow();
-	
 	return 0;
 }
